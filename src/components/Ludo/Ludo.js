@@ -39,13 +39,14 @@ const Ludo = () => {
     const [currentPlayer, setCurrentPlayer] = useState(null)
     const [roll, setRoll] = useState(null)
     const [positions, setPositions] = useState(null)
+    const [winner, setWinner] = useState(null)
 
     const generateBoard = (positions = []) => {
         const board_obj = cells.map((cell, index) => {
             const match = positions.filter(pos => pos === cell.toString())
             if (match.length > 0) {
-                let index = positions.indexOf(match[0])
-                let player = Math.floor(index / 2)
+                let id = positions.indexOf(match[0])
+                let player = Math.floor(id / 2)
                 return <BoardCell key={index} cell={cell} player={players[player]} />
             }
             return <BoardCell key={index} cell={cell} />
@@ -74,15 +75,17 @@ const Ludo = () => {
     const startGame = async () => {
         const result = await axios.post(`${server}/start_ludo`, {
             'players': players,
-            'game_state': gameState
+            'game_state': gameState,
         })
-        setCurrentPlayer(result.data)
+        setCurrentPlayer(result.data.next_player)
+        setPositions(result.data.result)
         setBoard(generateBoard())
         setStatus('playing')
-        setStatusData(`Player ${result.data}'s turn`)
+        setStatusData(`Player ${result.data.next_player}'s turn`)
     }
 
     const rollDice = async () => {
+        if (winner) return
         /* Will request a roll from server */
         const roll = await axios.get(`${server}/roll`)
         setRoll(roll.data)
@@ -90,7 +93,7 @@ const Ludo = () => {
     }
 
     const playGame = async (player, roll) => {
-        console.log(`${player} rolled ${roll}`)
+        if (winner) return
         const result = await axios.post(`${server}/play_game`, {
             'players': players,
             'game_state': gameState,
@@ -101,15 +104,26 @@ const Ludo = () => {
         setPositions(result.data.result)
         const new_board = generateBoard(result.data.result)
         setBoard(new_board)
-        console.log("next", result.data.next_player)
         setStatusData(`${player} roll: ${roll}. Player ${result.data.next_player}'s turn next.`)
+    }
+
+    const checkWinner = (player) => {
+        setWinner(player)
+        setStatusData(`Player ${player} has won.`)
     }
     return (
         <div className="outer-ludo">
             <div className="ludo">
                 <div className='ludo-col'>
-                    <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={0} />
-                    <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={2} />
+                    {positions ?
+                        (<>
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} />
+                        </>) : (<>
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                        </>)
+                    }
                 </div>
                 {status === "ready" && (
                     <button onClick={startGame}>Press to begin</button>
@@ -120,8 +134,15 @@ const Ludo = () => {
                     </div>
                 )}
                 <div className='ludo-col'>
-                    <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={0} />
-                    <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={0} />
+                    {positions ?
+                        (<>
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} />
+                        </>) : (<>
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                        </>)
+                    }
                 </div>
             </div>
             {status === "playing" &&

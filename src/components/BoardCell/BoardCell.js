@@ -33,7 +33,7 @@ const BoardCell = ({ player, cell }) => {
     return (
         <div className="board-cell" style={makeStyle()}>
             {!player && text != 0 && <div>{text}</div>}
-            {player && <Token player={player} />}
+            {player && <Token key={`player_${player}_${cell}`} player={player} />}
         </div>
     )
 }
