@@ -20,7 +20,6 @@
     flex-basis: 10;
     width: 750px;
     height: 750px;
-    background-color: #9d89cb;
 }
 
 .status {
@@ -31,4 +30,31 @@
     min-height: 30px;
     min-width: 700px;
     background-color: cadetblue;
+}
+
+.roll {
+    text-align: center;
+    font-size: 3em;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+    margin: 10px 0 10px 0;
+}
+
+.controls button {
+    width: 250px;
+    padding: 5px;
+    font-size: 2em;
+    background-color: #9d89cb;
+    border-radius: 10px;
+    border: 1px solid white;
+    transition: all 250ms ease;
+}
+
+.controls button:hover {
+    background-color: #c3aaff;
 }
