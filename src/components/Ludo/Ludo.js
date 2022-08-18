@@ -6,7 +6,6 @@ import BoardCell from './../BoardCell/BoardCell'
 import HomeArea from './../HomeArea/HomeArea'
 import Separator from './../Separator/Separator'
 
-const server = "http://localhost:5000"
 const colors = {
     'A': '#ffe699',
     'B': '#b4c7e7',
@@ -42,6 +41,7 @@ const Ludo = () => {
     const [roll, setRoll] = useState(null)
     const [positions, setPositions] = useState(null)
     const [winner, setWinner] = useState(null)
+    const [server, setServer] = useState(null)
 
     const generateBoard = (positions = []) => {
         const board_obj = cells.map((cell, index) => {
@@ -116,8 +116,15 @@ const Ludo = () => {
 
     const checkWinner = (player) => {
         setWinner(player)
-        setStatusData(`Player ${player} has won.`)
+        setTopStatus(`Player ${player} has won.`)
     }
+
+    useEffect(() => {
+        let url = window.location.href
+        if (url.includes('localhost')) setServer("http://localhost:5000")
+        else setServer("https://njb-ludo-server.herokuapp.com/")
+    }, [])
+
     return (
         <div className="outer-ludo">
             <h1>LUDO</h1>
@@ -126,7 +133,7 @@ const Ludo = () => {
             {status === 'playing' &&
                 <div className="top-status"
                     style={{
-                        'background-image': `linear-gradient(to right, white, ${colors[currentPlayer]}, ${colors[currentPlayer]}, white)`,
+                        'backgroundImage': `linear-gradient(to right, white, ${colors[currentPlayer]}, ${colors[currentPlayer]}, white)`,
                         'border': `2px solid ${colors[currentPlayer]}`
                     }}
                 >{topStatus}</div>
@@ -146,7 +153,7 @@ const Ludo = () => {
                 {status === "ready" && (
                     <div className="start-game-btn-container">
                         <button className="start-game-btn" onClick={startGame}>
-                            <h3>Current players:</h3>
+                            <h3>CURRENT PLAYERS</h3>
                             <div className="current-players">
                                 {players.map((player, index) => <BoardCell key={index} player={player} />)}
                             </div>
