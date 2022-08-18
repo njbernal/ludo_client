@@ -28,12 +28,17 @@ const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
     return (
         <div className='home-area' style={{ 'backgroundColor': color }} id={player} onClick={() => chooseArea({ player })}>
             <div className='player-name'>{player}</div>
-            <div className='token-holder'>
-                {homeTokens.length > 0 && homeTokens.map((token, index) => <BoardCell key={`home_${index}`} player={player} cell="H" />)}
-            </div>
-            <div className='token-holder ready-position'>
-                {readyTokens.length > 0 && readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
-            </div>
+            {homeTokens.length > 0 && (<>
+                <h3>Home Area</h3>
+                <div className='token-holder'>
+                    {homeTokens.map((token, index) => <BoardCell key={`home_${index}`} player={player} cell="H" />)}
+                </div>
+                <h3>Ready To Go</h3>
+                <div className='token-holder ready-position'>
+                    {readyTokens && readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
+                </div>
+            </>)
+            }
         </div>
     )
 }

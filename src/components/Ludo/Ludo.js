@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import BoardCell from './../BoardCell/BoardCell'
 import HomeArea from './../HomeArea/HomeArea'
+import Separator from './../Separator/Separator'
 
 const server = "http://localhost:5000"
 const colors = {
@@ -35,6 +36,7 @@ const Ludo = () => {
     const [players, setPlayers] = useState([])
     const [status, setStatus] = useState("select_players")
     const [statusData, setStatusData] = useState("Welcome. Select 2 or more players.")
+    const [topStatus, setTopStatus] = useState('')
     const [gameState, setGameState] = useState(null)
     const [currentPlayer, setCurrentPlayer] = useState(null)
     const [roll, setRoll] = useState(null)
@@ -81,7 +83,10 @@ const Ludo = () => {
         setPositions(result.data.result)
         setBoard(generateBoard())
         setStatus('playing')
-        setStatusData(`Player ${result.data.next_player}'s turn`)
+
+        const top_status = <>Player <span className="status_strong">{result.data.next_player}</span> turn</>
+        setTopStatus(top_status)
+        setStatusData(null)
     }
 
     const rollDice = async () => {
@@ -102,9 +107,11 @@ const Ludo = () => {
         setCurrentPlayer(result.data.next_player)
         setGameState(result.data.game_state)
         setPositions(result.data.result)
+        const top_status = <>Player <span className="status_strong">{result.data.next_player}</span> turn</>
+        setTopStatus(top_status)
         const new_board = generateBoard(result.data.result)
         setBoard(new_board)
-        setStatusData(`${player} roll: ${roll}. Player ${result.data.next_player}'s turn next.`)
+        setStatusData(`${player} roll: ${roll}.`)
     }
 
     const checkWinner = (player) => {
@@ -113,6 +120,17 @@ const Ludo = () => {
     }
     return (
         <div className="outer-ludo">
+            <h1>LUDO</h1>
+            <Separator />
+            <h2>A BOARD GAME</h2>
+            {status === 'playing' &&
+                <div className="top-status"
+                    style={{
+                        'background-image': `linear-gradient(to right, white, ${colors[currentPlayer]}, ${colors[currentPlayer]}, white)`,
+                        'border': `2px solid ${colors[currentPlayer]}`
+                    }}
+                >{topStatus}</div>
+            }
             <div className="ludo">
                 <div className='ludo-col'>
                     {positions ?
@@ -126,7 +144,15 @@ const Ludo = () => {
                     }
                 </div>
                 {status === "ready" && (
-                    <button onClick={startGame}>Press to begin</button>
+                    <div className="start-game-btn-container">
+                        <button className="start-game-btn" onClick={startGame}>
+                            <h3>Current players:</h3>
+                            <div className="current-players">
+                                {players.map((player, index) => <BoardCell key={index} player={player} />)}
+                            </div>
+                            <h4>ADD MORE OR CLICK TO BEGIN</h4>
+                        </button>
+                    </div>
                 )}
                 {status === "playing" && (
                     <div className="board">
@@ -147,12 +173,14 @@ const Ludo = () => {
             </div>
             {status === "playing" &&
                 <div className="controls" id="controls">
-                    <button onClick={rollDice}>Roll</button>
+                    <button style={{
+                        'border': `2px solid ${colors[currentPlayer]}`
+                    }} onClick={rollDice}>Roll</button>
                 </div>
             }
-            <div className="status" id="statusBar">
+            {/* <div className="status" id="statusBar">
                 {statusData}
-            </div>
+            </div> */}
 
             {status === "playing" && roll &&
                 <div className="roll" id="roll">

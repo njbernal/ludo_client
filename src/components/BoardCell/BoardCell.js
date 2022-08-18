@@ -13,17 +13,17 @@ const colors = {
 const BoardCell = ({ player, cell }) => {
     const [text, setText] = useState(cell)
 
-    const makeStyle = () => {
+    const makeStyle = (player) => {
         const style = {}
         if ((text >= 1) && (text <= 56)) {
             style['backgroundColor'] = '#c3aaff';
             style['borderLeft'] = '1px solid white';
             style['borderTop'] = '1px solid white'
-        } else if (typeof text == 'string') {
-            style['backgroundColor'] = colors[player];
+        } else if (typeof text == 'string' && cell !== 'H' && cell !== 'R') {
+            style['backgroundColor'] = colors[cell[0]];
             style['borderTop'] = '1px solid white'
             style['borderLeft'] = '1px solid white'
-        } else if (text == 0) {
+        } else if (text === 0) {
             style['backgroundColor'] = '#9d89cb';
             style['borderTop'] = '1px solid #9d89cb'
             style['borderLeft'] = '1px solid #9d89cb'
@@ -31,7 +31,7 @@ const BoardCell = ({ player, cell }) => {
         return style
     }
     return (
-        <div className="board-cell" style={makeStyle()}>
+        <div className="board-cell" style={makeStyle(player)}>
             {!player && text != 0 && <div>{text}</div>}
             {player && <Token key={`player_${player}_${cell}`} player={player} />}
         </div>
