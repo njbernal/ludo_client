@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: ludo-client
+    image: ludo-client
+    build:
+      context: .
+      target: production
