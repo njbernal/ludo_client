@@ -142,8 +142,8 @@ const Ludo = () => {
                 <div className='ludo-col'>
                     {positions ?
                         (<>
-                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} />
-                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} />
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} game_status={status} />
                         </>) : (<>
                             <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
                             <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
@@ -169,8 +169,8 @@ const Ludo = () => {
                 <div className='ludo-col'>
                     {positions ?
                         (<>
-                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} />
-                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} />
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} game_status={status} />
                         </>) : (<>
                             <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
                             <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
@@ -190,7 +190,8 @@ const Ludo = () => {
             </div> */}
 
             {status === "playing" && roll &&
-                <div className="roll" id="roll">
+                <div className="roll" id="roll" style={{ 'backgroundColor': colors[currentPlayer] }}>
+                    <h3>LATEST ROLL</h3>
                     {roll}
                 </div>
             }

@@ -1,7 +1,9 @@
 .token {
     font-size: 1em;
     font-weight: 200;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    margin: 0;
+    padding: 0;
 }

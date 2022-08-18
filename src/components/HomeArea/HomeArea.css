@@ -3,8 +3,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 250px;
+    width: 120px;
+    height: 175px;
     padding: 5px;
     border-radius: 10px;
     margin: 10px;
@@ -17,18 +17,24 @@
 .home-area h3 {
     font-size: 0.8em;
     font-weight: 200;
+    margin: 5px 0 5px 0;
+    padding: 0;
 }
 
 .player-name {
     display: flex;
     justify-content: center;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 500;
 }
 
 .token-holder {
     display: flex;
     justify-content: space-evenly;
+    min-height: 30px;
+    min-width: 80%;
+    padding: 5px;
+    border: 1px solid white;
 }
 
 .ready-position {

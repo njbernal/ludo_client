@@ -3,8 +3,9 @@ import BoardCell from '../BoardCell/BoardCell'
 import { useEffect, useState } from 'react'
 
 const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
-    const [homeTokens, setHomeTokens] = useState(0)
-    const [readyTokens, setReadyTokens] = useState(0)
+    const [homeTokens, setHomeTokens] = useState(null)
+    const [readyTokens, setReadyTokens] = useState(null)
+    const [status, setStatus] = useState(null)
 
     const loadTokens = () => {
         if (tokens[0] === 'E' && tokens[1] === 'E') {
@@ -16,9 +17,15 @@ const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
         if (tokens[1] === 'H') home += 1
         if (tokens[0] === 'R') ready += 1
         if (tokens[1] === 'R') ready += 1
+        if (tokens.length === 0) {
+            setStatus(null)
+        }
+        else if (tokens[0] === null || tokens[1] === null) setStatus(null)
+        else setStatus('playing')
 
         setHomeTokens([...Array(home)])
         setReadyTokens([...Array(ready)])
+        console.log(tokens, home, ready)
     }
 
     useEffect(() => {
@@ -28,14 +35,16 @@ const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
     return (
         <div className='home-area' style={{ 'backgroundColor': color }} id={player} onClick={() => chooseArea({ player })}>
             <div className='player-name'>{player}</div>
-            {homeTokens.length > 0 && (<>
+            {status === "playing" && (<>
                 <h3>Home Area</h3>
                 <div className='token-holder'>
                     {homeTokens.map((token, index) => <BoardCell key={`home_${index}`} player={player} cell="H" />)}
                 </div>
+            </>)}
+            {status === 'playing' && (<>
                 <h3>Ready To Go</h3>
                 <div className='token-holder ready-position'>
-                    {readyTokens && readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
+                    {readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
                 </div>
             </>)
             }
