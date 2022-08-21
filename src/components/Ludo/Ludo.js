@@ -195,8 +195,8 @@ const Ludo = () => {
                     }
                 </div>
                 {status === "ready" && (
-                    <div id="startBtn" className="start-game-btn-container">
-                        <button className="start-game-btn" onClick={startGame}>
+                    <div className="start-game-btn-container">
+                        <button className="start-game-btn" id="startBtn" onClick={startGame}>
                             <h3>CURRENT PLAYERS</h3>
                             <div className="current-players">
                                 {players.map((player, index) => <BoardCell key={index} player={player} />)}
