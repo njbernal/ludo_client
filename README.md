@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Ludo: Board Game
 
 A Ludo board game in React.
 Requires the use of a Ludo Server.
