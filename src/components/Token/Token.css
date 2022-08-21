@@ -1,9 +1,21 @@
 .token {
     font-size: 1em;
     font-weight: 200;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 10px;
+    border: 1px solid #060606;
     margin: 0;
     padding: 0;
+}
+
+.stacked {
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
+.top {
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 5px;
 }

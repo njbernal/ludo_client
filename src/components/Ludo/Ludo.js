@@ -29,6 +29,8 @@ cell_arr = [...cell_arr, 45, 0, 0, 0, 0, 0, 0, 'D2', 0, 0, 0, 0, 0, 0, 27]
 cell_arr = [...cell_arr, 44, 0, 0, 0, 0, 0, 0, 'D1', 0, 0, 0, 0, 0, 0, 28]
 cell_arr = [...cell_arr, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29]
 
+const possible_players = ['A', 'B', 'C', 'D']
+
 const Ludo = () => {
     const [board, setBoard] = useState(null)
     const [cells, setCells] = useState(cell_arr)
@@ -43,13 +45,31 @@ const Ludo = () => {
     const [winner, setWinner] = useState(null)
     const [server, setServer] = useState(null)
 
+    const reset = () => {
+        setBoard(null)
+        setCells(null)
+        setPlayers(null)
+        setStatus("select_players")
+        setStatusData("Welcome. Select 2 or more players.")
+        setTopStatus('')
+        setGameState([])
+        setCurrentPlayer(null)
+        setRoll(null)
+        setPositions(null)
+        setWinner(null)
+        setServer(null)
+        document.body.style.backgroundColor = '#fff'
+    }
+
     const generateBoard = (positions = []) => {
         const board_obj = cells.map((cell, index) => {
             const match = positions.filter(pos => pos === cell.toString())
             if (match.length > 0) {
+                let stack;
+                match.length === 2 ? stack = true : stack = false;
                 let id = positions.indexOf(match[0])
-                let player = Math.floor(id / 2)
-                return <BoardCell key={index} cell={cell} player={players[player]} />
+                let player = possible_players[parseInt(id / 2)]
+                return <BoardCell key={index} cell={cell} player={player} stacked={stack} />
             }
             return <BoardCell key={index} cell={cell} />
         })
@@ -65,6 +85,8 @@ const Ludo = () => {
             new_players = players.filter(item => item !== player)
         }
         setPlayers(new_players)
+        const div = document.getElementById(player)
+        div.classList.toggle("box-selected")
         if (new_players.length >= 2) {
             setStatus("ready")
             setStatusData("Press start to begin or select additional players.")
@@ -75,9 +97,10 @@ const Ludo = () => {
     }
 
     const startGame = async () => {
+        removeActiveHomes()
         const result = await axios.post(`${server}/start_ludo`, {
             'players': players,
-            'game_state': gameState,
+            'game_state': [],
         })
         setCurrentPlayer(result.data.next_player)
         setPositions(result.data.result)
@@ -87,6 +110,17 @@ const Ludo = () => {
         const top_status = <>Player <span className="status_strong">{result.data.next_player}</span> turn</>
         setTopStatus(top_status)
         setStatusData(null)
+        const div = document.getElementById(result.data.next_player)
+        div.classList.add('box-selected')
+        document.body.style.backgroundColor = colors[result.data.next_player] + '88'
+    }
+
+    const removeActiveHomes = () => {
+        const divs = document.getElementsByClassName("home-area")
+        for (let div of divs) {
+            div.classList.remove('home-area-hover')
+            div.classList.remove('box-selected')
+        }
     }
 
     const rollDice = async () => {
@@ -98,13 +132,13 @@ const Ludo = () => {
     }
 
     const playGame = async (player, roll) => {
+        removeActiveHomes()
         if (winner) return
         const result = await axios.post(`${server}/play_game`, {
             'players': players,
             'game_state': gameState,
             'move': [player, roll]
         })
-        setCurrentPlayer(result.data.next_player)
         setGameState(result.data.game_state)
         setPositions(result.data.result)
         const top_status = <>Player <span className="status_strong">{result.data.next_player}</span> turn</>
@@ -112,9 +146,16 @@ const Ludo = () => {
         const new_board = generateBoard(result.data.result)
         setBoard(new_board)
         setStatusData(`${player} roll: ${roll}.`)
+        setCurrentPlayer(result.data.next_player)
+        const div = document.getElementById(result.data.next_player)
+        div.classList.add('box-selected')
+        document.body.style.backgroundColor = colors[result.data.next_player] + '88'
+        document.body.style.backgroundColor = colors[player] + '88'
+
     }
 
     const checkWinner = (player) => {
+        document.body.style.backgroundColor = colors[player]
         setWinner(player)
         setTopStatus(`Player ${player} has won.`)
     }
@@ -133,8 +174,7 @@ const Ludo = () => {
             {status === 'playing' &&
                 <div className="top-status"
                     style={{
-                        'backgroundImage': `linear-gradient(to right, white, ${colors[currentPlayer]}, ${colors[currentPlayer]}, white)`,
-                        'border': `2px solid ${colors[currentPlayer]}`
+                        'backgroundImage': `linear-gradient(to right, #ffffff00, ${colors[currentPlayer]}, ${colors[currentPlayer]}, #ffffff00)`
                     }}
                 >{topStatus}</div>
             }
@@ -145,8 +185,8 @@ const Ludo = () => {
                             <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} game_status={status} />
                             <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} game_status={status} />
                         </>) : (<>
-                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
-                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
                         </>)
                     }
                 </div>
@@ -172,16 +212,16 @@ const Ludo = () => {
                             <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} game_status={status} />
                             <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} game_status={status} />
                         </>) : (<>
-                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
-                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} />
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
                         </>)
                     }
                 </div>
             </div>
-            {status === "playing" &&
+            {status === "playing" && !winner &&
                 <div className="controls" id="controls">
                     <button style={{
-                        'border': `2px solid ${colors[currentPlayer]}`
+                        'border': `2px solid ${colors[currentPlayer]}aa`,
                     }} onClick={rollDice}>Roll</button>
                 </div>
             }
@@ -189,10 +229,18 @@ const Ludo = () => {
                 {statusData}
             </div> */}
 
-            {status === "playing" && roll &&
+            {status === "playing" && !winner && roll &&
                 <div className="roll" id="roll" style={{ 'backgroundColor': colors[currentPlayer] }}>
                     <h3>LATEST ROLL</h3>
                     {roll}
+                </div>
+            }
+
+            {winner &&
+                <div className="controls" id="controls">
+                    <button style={{
+                        'border': `2px solid ${colors[currentPlayer]}aa`,
+                    }} onClick={reset}>New Game</button>
                 </div>
             }
         </div>

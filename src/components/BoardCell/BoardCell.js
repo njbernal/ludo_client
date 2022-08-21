@@ -10,7 +10,7 @@ const colors = {
     'D': '#c5e0b4'
 }
 
-const BoardCell = ({ player, cell }) => {
+const BoardCell = ({ player, cell, stacked }) => {
     const [text, setText] = useState(cell)
 
     const makeStyle = (player) => {
@@ -33,7 +33,7 @@ const BoardCell = ({ player, cell }) => {
     return (
         <div className="board-cell" style={makeStyle(player)}>
             {!player && text != 0 && <div>{text}</div>}
-            {player && <Token key={`player_${player}_${cell}`} player={player} />}
+            {player && <Token key={`player_${player}_${cell}`} player={player} stacked={stacked} />}
         </div>
     )
 }

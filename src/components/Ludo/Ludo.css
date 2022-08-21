@@ -8,6 +8,10 @@ body,
     font-family: 'Montserrat', sans-serif;
 }
 
+body {
+    transition: all 350ms ease;
+}
+
 .outer-ludo {
     margin: 5px 0 0 0;
     display: flex;
@@ -101,16 +105,19 @@ body,
 .controls button {
     padding: 5px;
     font-size: 1em;
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 100px;
     text-align: center;
     border-radius: 10px;
     border: 1px solid white;
     transition: all 250ms ease;
+    background-color: #9d89cb;
+    color: white;
+    font-weight: 300;
 }
 
 .controls button:hover {
-    background-color: #c3aaff;
+    background-color: #b2aac6;
 }
 
 .top-status {
@@ -118,7 +125,7 @@ body,
     justify-content: center;
     align-items: center;
     font-size: 1em;
-    border: 1px solid #717171aa;
+    border: 0;
     padding: 5px;
     min-width: 250px;
     text-align: center;
@@ -181,7 +188,7 @@ body,
     justify-content: center;
     align-items: center;
     border: 1px solid #9d89cb;
-    border-radius: 10px;
+    border-radius: 150px;
     position: relative;
     width: 300px;
     height: 300px;

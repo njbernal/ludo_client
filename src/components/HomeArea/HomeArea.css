@@ -8,9 +8,10 @@
     padding: 5px;
     border-radius: 10px;
     margin: 10px;
+    border: 1px solid #aaaaaa;
 }
 
-.home-area:hover {
+.home-area-hover:hover {
     box-shadow: 0px 0px 5px 5px #9d89cb;
 }
 
@@ -39,4 +40,8 @@
 
 .ready-position {
     height: 30px;
+}
+
+.box-selected {
+    box-shadow: 0px 0px 5px 5px #9d89cb;
 }

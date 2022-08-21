@@ -7,9 +7,18 @@ const colors = {
     'D': '#70ad47'
 }
 
-const Token = ({ token, player }) => {
+const Token = ({ token, player, stacked }) => {
     return (
-        <div className='token' style={{ 'backgroundColor': colors[player] }}>{token}</div>
+        <>
+            {!stacked ? (
+                <div className='token' style={{ 'backgroundColor': colors[player] }}></div>
+            ) : (
+                <div className="stacked">
+                    <div className='token' style={{ 'backgroundColor': colors[player] }}></div>
+                    <div className='token top' style={{ 'backgroundColor': colors[player] }}></div>
+                </div>
+            )}
+        </>
     )
 }
 

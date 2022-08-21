@@ -2,7 +2,7 @@ import './HomeArea.css'
 import BoardCell from '../BoardCell/BoardCell'
 import { useEffect, useState } from 'react'
 
-const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
+const HomeArea = ({ player, color, chooseArea, tokens, reportWinner, game_status }) => {
     const [homeTokens, setHomeTokens] = useState(null)
     const [readyTokens, setReadyTokens] = useState(null)
     const [status, setStatus] = useState(null)
@@ -21,11 +21,10 @@ const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
             setStatus(null)
         }
         else if (tokens[0] === null || tokens[1] === null) setStatus(null)
-        else setStatus('playing')
+        else setStatus(game_status)
 
         setHomeTokens([...Array(home)])
         setReadyTokens([...Array(ready)])
-        console.log(tokens, home, ready)
     }
 
     useEffect(() => {
@@ -33,22 +32,25 @@ const HomeArea = ({ player, color, chooseArea, tokens, reportWinner }) => {
     }, [tokens])
 
     return (
-        <div className='home-area' style={{ 'backgroundColor': color }} id={player} onClick={() => chooseArea({ player })}>
+        <div className='home-area home-area-hover' style={{ 'backgroundColor': color }} id={player} onClick={() => chooseArea({ player })}>
             <div className='player-name'>{player}</div>
-            {status === "playing" && (<>
-                <h3>Home Area</h3>
-                <div className='token-holder'>
-                    {homeTokens.map((token, index) => <BoardCell key={`home_${index}`} player={player} cell="H" />)}
-                </div>
-            </>)}
-            {status === 'playing' && (<>
-                <h3>Ready To Go</h3>
-                <div className='token-holder ready-position'>
-                    {readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
-                </div>
-            </>)
+            {
+                status === "playing" && (<>
+                    <h3>Home Area</h3>
+                    <div className='token-holder'>
+                        {homeTokens.map((token, index) => <BoardCell key={`home_${index}`} player={player} cell="H" />)}
+                    </div>
+                </>)
             }
-        </div>
+            {
+                status === 'playing' && (<>
+                    <h3>Ready To Go</h3>
+                    <div className='token-holder ready-position'>
+                        {readyTokens.map((token, index) => <BoardCell key={`ready_${index}`} player={player} cell="R" />)}
+                    </div>
+                </>)
+            }
+        </div >
     )
 }
 
