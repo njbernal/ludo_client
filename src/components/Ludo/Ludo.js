@@ -99,6 +99,9 @@ const Ludo = () => {
 
     const startGame = async () => {
         removeActiveHomes()
+        const startBtn = document.getElementById('startBtn')
+        startBtn.innerHTML = 'Waking up the server... stand by.'
+
         const result = await axios.post(`${server}/start_ludo`, {
             'players': players,
             'game_state': [],
@@ -192,7 +195,7 @@ const Ludo = () => {
                     }
                 </div>
                 {status === "ready" && (
-                    <div className="start-game-btn-container">
+                    <div id="startBtn" className="start-game-btn-container">
                         <button className="start-game-btn" onClick={startGame}>
                             <h3>CURRENT PLAYERS</h3>
                             <div className="current-players">
