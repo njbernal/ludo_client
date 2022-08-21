@@ -154,8 +154,6 @@ const Ludo = () => {
         const div = document.getElementById(result.data.next_player)
         div.classList.add('box-selected')
         document.body.style.backgroundColor = colors[result.data.next_player] + '88'
-        document.body.style.backgroundColor = colors[player] + '88'
-
     }
 
     const checkWinner = (player) => {
