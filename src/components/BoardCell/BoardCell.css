@@ -6,3 +6,11 @@
     height: 32px;
     font-size: 0.8em;
 }
+
+@media only screen and (max-width: 800px) {
+    .board-cell {
+        font-size: 0.7em;
+        max-width: calc(6%);
+        max-height: calc(5.2vw);
+    }
+}

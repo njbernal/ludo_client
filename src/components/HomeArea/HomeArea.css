@@ -45,3 +45,50 @@
 .box-selected {
     box-shadow: 0px 0px 5px 5px #9d89cb;
 }
+
+
+@media only screen and (max-width: 800px) {
+    .player-name {
+        width: 100%;
+        font-size: 1em;
+        margin: 0;
+        padding: 0;
+    }
+
+    .home-inner {
+        margin: -15px 0 0 0;
+        padding: 0;
+    }
+
+    .home-area {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 50%;
+        height: 85px;
+        padding: 0px;
+        margin: 10px 0 10px 0;
+        border-radius: 0;
+    }
+
+    .home-area h3 {
+        font-size: 0.7em;
+        font-weight: 200;
+        margin: 2px 0 2px 0;
+        padding: 0;
+    }
+
+    .token-holder {
+        justify-content: space-evenly;
+        align-items: center;
+        height: 20px;
+        width: 20px;
+    }
+
+    .box-selected {
+        box-shadow: 0px 0px 2px 2px #9d89cb;
+    }
+
+
+}

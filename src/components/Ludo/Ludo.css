@@ -219,7 +219,91 @@ body {
 }
 
 .current-players {
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media only screen and (max-width: 800px) {
+    .outer-ludo {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .outer-ludo h1 {
+        font-weight: 100;
+        font-size: 1.5em;
+        margin: 0 0 5px 0;
+        padding: 0;
+    }
+
+    .outer-ludo h2 {
+        display: none;
+    }
+
+    .separator {
+        margin-top: -4px !important;
+    }
+
+    .ludo {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
+    .ludo-col {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .board {
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        flex-basis: 10;
+        width: 90%;
+        height: auto;
+    }
+
+    .roll {
+        top: -282px;
+        left: 79px;
+        font-size: 1.5em;
+    }
+
+    .roll h3 {
+        font-size: 0.4m;
+    }
+
+    .controls {
+        justify-content: flex-start;
+        margin: -6px 0 0 0;
+    }
+
+    .controls button {
+        padding: 5px;
+        font-size: 1em;
+        height: 40px;
+        width: 100px;
+        text-align: center;
+        border-radius: 10px;
+        border: 1px solid white;
+        transition: all 250ms ease;
+        background-color: #9d89cb;
+        color: white;
+        font-weight: 300;
+        cursor: pointer;
+    }
+
+    .current-players {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .current-players .token {
+        margin: 0 10px 0 10px;
+    }
 }

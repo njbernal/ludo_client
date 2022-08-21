@@ -5,6 +5,7 @@ import axios from 'axios'
 import BoardCell from './../BoardCell/BoardCell'
 import HomeArea from './../HomeArea/HomeArea'
 import Separator from './../Separator/Separator'
+import Token from './../Token/Token'
 
 const colors = {
     'A': '#ffe699',
@@ -44,6 +45,7 @@ const Ludo = () => {
     const [positions, setPositions] = useState(null)
     const [winner, setWinner] = useState(null)
     const [server, setServer] = useState(null)
+    const [deviceType, setDeviceType] = useState("");
 
     const reset = () => {
         removeActiveHomes()
@@ -63,6 +65,7 @@ const Ludo = () => {
     }
 
     const generateBoard = (positions = []) => {
+
         const board_obj = cells.map((cell, index) => {
             const match = positions.filter(pos => pos === cell.toString())
             if (match.length > 0) {
@@ -162,7 +165,35 @@ const Ludo = () => {
         setTopStatus(`Player ${player} has won.`)
     }
 
+    const detectDevice = () => {
+        let hasTouchScreen = false;
+        if ("maxTouchPoints" in navigator) {
+            hasTouchScreen = navigator.maxTouchPoints > 0;
+        } else if ("msMaxTouchPoints" in navigator) {
+            hasTouchScreen = navigator.msMaxTouchPoints > 0;
+        } else {
+            const mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+            if (mQ && mQ.media === "(pointer:coarse)") {
+                hasTouchScreen = !!mQ.matches;
+            } else if ("orientation" in window) {
+                hasTouchScreen = true; // deprecated, but good fallback
+            } else {
+                // Only as a last resort, fall back to user agent sniffing
+                var UA = navigator.userAgent;
+                hasTouchScreen =
+                    /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+                    /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+            }
+        }
+        if (hasTouchScreen) {
+            setDeviceType("Mobile");
+        } else {
+            setDeviceType("Desktop");
+        }
+    }
+
     useEffect(() => {
+        detectDevice()
         let url = window.location.href
         if (url.includes('localhost')) setServer("http://localhost:5000")
         else setServer("https://njb-ludo-server.herokuapp.com/")
@@ -184,11 +215,11 @@ const Ludo = () => {
                 <div className='ludo-col'>
                     {positions ?
                         (<>
-                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} game_status={status} />
-                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={positions.slice(0, 2)} reportWinner={checkWinner} game_status={status} device={deviceType} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={positions.slice(6)} reportWinner={checkWinner} game_status={status} device={deviceType} />
                         </>) : (<>
-                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
-                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'A'} color={colors['A']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} device={deviceType} />
+                            <HomeArea player={'D'} color={colors['D']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} device={deviceType} />
                         </>)
                     }
                 </div>
@@ -197,7 +228,7 @@ const Ludo = () => {
                         <button className="start-game-btn" id="startBtn" onClick={startGame}>
                             <h3>CURRENT PLAYERS</h3>
                             <div className="current-players">
-                                {players.map((player, index) => <BoardCell key={index} player={player} />)}
+                                {players.map((player, index) => <Token key={`player_${player}_H${index}`} player={player} stacked={false} />)}
                             </div>
                             <h4>ADD MORE OR CLICK TO BEGIN</h4>
                         </button>
@@ -211,11 +242,11 @@ const Ludo = () => {
                 <div className='ludo-col'>
                     {positions ?
                         (<>
-                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} game_status={status} />
-                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={positions.slice(2, 4)} reportWinner={checkWinner} game_status={status} device={deviceType} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={positions.slice(4, 6)} reportWinner={checkWinner} game_status={status} device={deviceType} />
                         </>) : (<>
-                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
-                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} />
+                            <HomeArea player={'B'} color={colors['B']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} device={deviceType} />
+                            <HomeArea player={'C'} color={colors['C']} chooseArea={selectPlayer} tokens={[]} reportWinner={checkWinner} game_status={status} device={deviceType} />
                         </>)
                     }
                 </div>
