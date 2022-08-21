@@ -46,6 +46,7 @@ const Ludo = () => {
     const [server, setServer] = useState(null)
 
     const reset = () => {
+        removeActiveHomes()
         setBoard(null)
         setCells(null)
         setPlayers(null)
